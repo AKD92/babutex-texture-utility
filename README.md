@@ -4,4 +4,4 @@ An utility program useful for working with the game textures of [GTA III](https:
 <img align="center" src="https://github.com/AKD92/babutex-texture-utility/raw/main/banner.png">
 
 ## Possible Release Date
-Development of this utility program is going on. The first working version will be released within July 30th, 2021. The readme file will be updated as well, reflecting the usage and purpose of this program and the problems it will solve.
+This software is currently on the development phase. The first working version will be released within **July 30th, 2021**. The readme file will be updated as well, reflecting the usage and purpose of this program and the problems it will solve.
