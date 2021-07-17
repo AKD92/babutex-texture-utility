@@ -1,0 +1,34 @@
+
+#include <winver.h>
+
+
+
+MAINICON ICON "../assets/qpng.ico"
+
+//VERSIONINFO
+
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILETYPE VFT_APP
+{
+  BLOCK "StringFileInfo"
+	 {
+		 BLOCK "040904B0"
+		 {
+            VALUE "Comments",         "A program to query dimension of PNG images."
+            VALUE "CompanyName",      "akd.bracu@gmail.com"
+            VALUE "FileDescription",  "PNG dimension query program"
+            VALUE "FileVersion",      "1.0.0.0"
+            VALUE "InternalName",     ""
+            VALUE "LegalCopyright",   ""
+            VALUE "OriginalFilename", "qpng.exe"
+            VALUE "ProductName",      "BABUTEX Texture Utility Program"
+            VALUE "ProductVersion",	  "1.0.0.0"
+		 }
+	 }
+  BLOCK "VarFileInfo"
+	 {
+		 VALUE "Translation", 0x409, 1200
+	 }
+}
