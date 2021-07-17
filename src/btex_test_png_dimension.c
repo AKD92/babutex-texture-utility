@@ -72,13 +72,13 @@ int main(void) {
     
     // Ask user if they want to use this program again. If yes, execute the main portion again.
     ASK_RUN:
-    printf("Run this program again? (y/n): ");
-    key_pressed = getche();
-    printf("\n");
-    if (key_pressed == 'y')
-        goto RUN_PROGRAM;
-    else if (key_pressed != 'n')
-        goto ASK_RUN;
+        printf("Run this program again? (y/n): ");
+        key_pressed = getche();
+        printf("\n");
+        if (key_pressed == 'y')
+            goto RUN_PROGRAM;
+        else if (key_pressed != 'n')
+            goto ASK_RUN;
     
     return 0;
 }
