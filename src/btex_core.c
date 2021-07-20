@@ -134,6 +134,13 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
             texture->width = uwidth;
             texture->height = uheight;
             
+            // Set the file pointer before 101th byte.
+            opval = fseek(fp_texture, 100L, SEEK_SET);
+            if (opval != 0) {
+                retval = -2;
+                goto CLOSE_AND_RETURN;
+            }
+            
             // Read compression level of the renderware texture.
             readcount = fread((void *) &magic_number[0], 1, 4, fp_texture);
             if (readcount < 4) {
@@ -146,7 +153,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
                 texture->compression_level = BTEX_COMPRESS_UNKNOWN;
             }
             else {
-                comp_level = ((unsigned int )magic_number[3]) - 30;
+                comp_level = ((unsigned int )magic_number[3]) - 0x30;
                 texture->compression_level = comp_level;
             }
             texture->type = BTEX_TYPE_RWTEX;
