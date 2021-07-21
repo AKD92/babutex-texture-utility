@@ -15,7 +15,7 @@ int btex_texture_init(struct BTEX_TEXTURE *texture_data) {
     if (texture_data == NULL)
         return -1;
     
-    memset((void *) texture_data, 0, sizeof(struct BTEX_TEXTURE));
+    (void) memset((void *) texture_data, 0, sizeof(struct BTEX_TEXTURE));
     return 0;
 }
 
@@ -25,8 +25,8 @@ void btex_texture_destroy(struct BTEX_TEXTURE *texture_data) {
     if (texture_data == NULL)
         return;
     
-    free((void *) texture_data->file_name);
-    free((void *) texture_data->file_path);
+    (void) free((void *) texture_data->file_name);
+    (void) free((void *) texture_data->file_path);
     return;
 }
 
@@ -51,18 +51,19 @@ int btex_littleendian_4byte(char *bytes) {
 
 int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
     
-    int retval, cmpval_png, cmpval_rwtex, opval, cmpval_cmpress;
+    int retval, cmpval_png, cmpval_rw, opval, cmpval_cmpress;
     FILE *fp_texture;
-    char *sig_png, *sig_rwtex, *comp_rwtex;
+    char *sig_png, *sig_rw, *comp_rw;
     char magic_number[4];
     unsigned int readcount;
     unsigned int uwidth, uheight, comp_level;
     
     fp_texture = NULL;
     sig_png = "\x89\x50\x4E\x47";
-    sig_rwtex = "\x15\x00\x00\x00";
-    comp_rwtex = "\x44\x58\x54";
+    sig_rw = "\x15\x00\x00\x00";
+    comp_rw = "\x44\x58\x54";
     
+    // Open the file in binary read mode.
     fp_texture = fopen(filename, "rb");
     if (fp_texture == NULL) {
         retval = -1;
@@ -76,7 +77,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
     else {
         uwidth = uheight = 0;
         cmpval_png = memcmp((const void *) &magic_number[0], (const void *) sig_png, 4);
-        cmpval_rwtex = memcmp((const void *) &magic_number[0], (const void *) sig_rwtex, 4);
+        cmpval_rw = memcmp((const void *) &magic_number[0], (const void *) sig_rw, 4);
         
         if (cmpval_png == 0) {
             
@@ -101,6 +102,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
                 goto CLOSE_AND_RETURN;
             }
             
+            // Convert from big endian (network) byte order to little endian (windows) byte order.
             (void) btex_littleendian_4byte((char *) &uwidth);
             (void) btex_littleendian_4byte((char *) &uheight);
             texture->width = uwidth;
@@ -108,7 +110,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
             texture->type = BTEX_TYPE_PNG;
             retval = 0;
         }
-        else if (cmpval_rwtex == 0) {
+        else if (cmpval_rw == 0) {
             
             // Set the file pointer before 105th byte.
             opval = fseek(fp_texture, 104L, SEEK_SET);
@@ -131,9 +133,6 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
                 goto CLOSE_AND_RETURN;
             }
             
-            texture->width = uwidth;
-            texture->height = uheight;
-            
             // Set the file pointer before 101th byte.
             opval = fseek(fp_texture, 100L, SEEK_SET);
             if (opval != 0) {
@@ -148,15 +147,19 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
                 goto CLOSE_AND_RETURN;
             }
             
-            cmpval_cmpress = memcmp((const void *) &magic_number[0], (const void *) comp_rwtex, 3);
+            // Determine compression of this renderware texture through 3-byte compression signature.
+            cmpval_cmpress = memcmp((const void *) &magic_number[0], (const void *) comp_rw, 3);
             if (cmpval_cmpress != 0) {
-                texture->compression_level = BTEX_COMPRESS_UNKNOWN;
+                texture->compression_level = BTEX_COMPRESS_UNCOMPRESSED;
             }
             else {
-                comp_level = ((unsigned int )magic_number[3]) - 0x30;
+                comp_level = ((unsigned int) magic_number[3]) - 0x30;
                 texture->compression_level = comp_level;
             }
-            texture->type = BTEX_TYPE_RWTEX;
+            
+            texture->width = uwidth;
+            texture->height = uheight;
+            texture->type = BTEX_TYPE_RW;
             retval = 0;
         }
         else {
@@ -165,7 +168,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
     }
     
     CLOSE_AND_RETURN:
-    fclose(fp_texture);
+    (void) fclose(fp_texture);
     return retval;
 }
 
@@ -184,7 +187,7 @@ int btex_list_directories(const char *path, List *directories) {
     if (path == NULL || directories == NULL)
         return -1;
     
-    sprintf(&fullpath[0], "%s\\*", path);
+    (void) sprintf(&fullpath[0], "%s\\*", path);
     search_hndl = FindFirstFile(&fullpath[0], &search_info);
     if (search_hndl == INVALID_HANDLE_VALUE)
         return -2;
@@ -198,15 +201,15 @@ int btex_list_directories(const char *path, List *directories) {
         if (cmp_filename_dot != 0 && cmp_filename_ddot != 0 && is_directory != 0) {
             name_length = strlen(search_info.cFileName);
             filename = (char *) malloc(name_length + 1);
-            strcpy(filename, (const char *) search_info.cFileName);
+            (void) strcpy(filename, (const char *) search_info.cFileName);
             last_entry = list_tail(directories);
-            list_ins_next(directories, last_entry, (const void *) filename);
+            (void) list_ins_next(directories, last_entry, (const void *) filename);
         }
         opval_nextfind = FindNextFile(search_hndl, &search_info);
         if (opval_nextfind != 0)
             goto FIND_DIRECTORIES;
     
-    FindClose(search_hndl);
+    (void) FindClose(search_hndl);
     return 0;
 }
 
@@ -226,10 +229,10 @@ int btex_list_textures(const char *path, const char *directory, List *textures) 
         return -1;
     
     if (directory == NULL || strlen(directory) == 0) {
-        sprintf(&search_string[0], "%s\\*", path);
+        (void) sprintf(&search_string[0], "%s\\*", path);
     }
     else {
-        sprintf(&search_string[0], "%s\\%s\\*", path, directory);
+        (void) sprintf(&search_string[0], "%s\\%s\\*", path, directory);
     }
     
     search_hndl = FindFirstFile(&search_string[0], &search_info);
@@ -247,41 +250,42 @@ int btex_list_textures(const char *path, const char *directory, List *textures) 
         if (cmp_filename_dot != 0 && cmp_filename_ddot != 0 && is_directory == 0) {
             
             // Initialize our dummy texture info object.
-            btex_texture_init(&dummy_tex);
+            (void) btex_texture_init(&dummy_tex);
             
             // Get information on the current texture file.
             // 'fullname' is the string containing full path & name of the current texture file.
-            sprintf(&fullname[0], "%s\\%s", &search_string[0], search_info.cFileName);
+            (void) sprintf(&fullname[0], "%s\\%s", &search_string[0], search_info.cFileName);
             opval_texture = btex_texture_info((const char *) &fullname[0], &dummy_tex);
             
             // Check whether we've found a valid texture file or not.
             if (opval_texture == 0) {
                 
                 // We have got a valid texture.
-                // Now store the data from our dummy texture info object to the actual texture info object.
+                // Now copy the data from our dummy texture info object to the actual texture info object.
                 texture = (struct BTEX_TEXTURE *) malloc(sizeof(struct BTEX_TEXTURE));
+                (void) btex_texture_init(texture);
                 texture->type = dummy_tex.type;
                 texture->width = dummy_tex.width;
                 texture->height = dummy_tex.height;
                 texture->compression_level = dummy_tex.compression_level;
                 texture->file_path = (char *) malloc(strlen((const char *) &fullname[0]) + 1);
                 texture->file_name = (char *) malloc(strlen(search_info.cFileName) + 1);
-                strcpy(texture->file_name, (const char *) search_info.cFileName);
-                strcpy(texture->file_path, (const char *) &fullname[0]);
+                (void) strcpy(texture->file_name, (const char *) search_info.cFileName);
+                (void) strcpy(texture->file_path, (const char *) &fullname[0]);
                 
                 // Add this texture info object to the output list.
                 last_entry = list_tail(textures);
-                list_ins_next(textures, last_entry, (const void *) texture);
+                (void) list_ins_next(textures, last_entry, (const void *) texture);
             }
             
             // Erase all data stored to dummy texture info object.
-            btex_texture_destroy(&dummy_tex);
+            (void) btex_texture_destroy(&dummy_tex);
         }
         opval_nextfind = FindNextFile(search_hndl, &search_info);
         if (opval_nextfind != 0)
             goto FIND_TEXTURES;
     
-    FindClose(search_hndl);
+    (void) FindClose(search_hndl);
     return 0;
 }
 
@@ -310,13 +314,13 @@ int btex_copy(const char *source_file, const char *dest_file) {
     
     while (feof(fp_source) == 0) {
         readcount = fread((void *) &buffer[0], 1, sizeof(buffer), fp_source);
-        fwrite((const void *) &buffer[0], 1, readcount, fp_destination);
-        fflush(fp_destination);
+        (void) fwrite((const void *) &buffer[0], 1, readcount, fp_destination);
+        (void) fflush(fp_destination);
     }
     retval = 0;
     
     CLOSE_AND_RETURN:
-    fclose(fp_source);
-    fclose(fp_destination);
+    (void) fclose(fp_source);
+    (void) fclose(fp_destination);
     return retval;
 }

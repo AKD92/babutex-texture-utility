@@ -105,7 +105,7 @@
 			<Option target="Debug64" />
 			<Option target="Release64" />
 		</Unit>
-		<Unit filename="resources/png_dimension.rc">
+		<Unit filename="resources/query.rc">
 			<Option compilerVar="WINDRES" />
 			<Option target="QueryTextureInfo" />
 		</Unit>

@@ -3,15 +3,16 @@
 #define BTEX_H_INCLUDED
 
 
-#define BTEX_TYPE_UNDEFINED     0
-#define BTEX_TYPE_PNG           2
-#define BTEX_TYPE_RWTEX         4
-#define BTEX_COMPRESS_UNKNOWN   0
-#define BTEX_COMPRESS_DXT1      1
-#define BTEX_COMPRESS_DXT2      2
-#define BTEX_COMPRESS_DXT3      3
-#define BTEX_COMPRESS_DXT4      4
-#define BTEX_COMPRESS_DXT5      5
+#define BTEX_TYPE_UNDEFINED         0
+#define BTEX_TYPE_PNG               2
+#define BTEX_TYPE_RW                4
+#define BTEX_COMPRESS_UNKNOWN       0
+#define BTEX_COMPRESS_UNCOMPRESSED  0
+#define BTEX_COMPRESS_DXT1          1
+#define BTEX_COMPRESS_DXT2          2
+#define BTEX_COMPRESS_DXT3          3
+#define BTEX_COMPRESS_DXT4          4
+#define BTEX_COMPRESS_DXT5          5
 
 
 #include <list.h>
