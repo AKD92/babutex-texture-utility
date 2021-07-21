@@ -113,6 +113,13 @@
 		<Unit filename="src/btex_core.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/btex_main.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Debug64" />
+			<Option target="Release64" />
+		</Unit>
 		<Unit filename="src/btex_merge.c">
 			<Option compilerVar="CC" />
 			<Option target="Debug" />

@@ -7,11 +7,11 @@
 
 
 
-void destroy_btex_texture(void *data);
+static void free_btex_texture(void *data);
 void get_info_string(char *type, char *compression, const struct BTEX_TEXTURE *texture_info);
 
 
-void destroy_btex_texture(void *data) {
+static void free_btex_texture(void *data) {
     
     struct BTEX_TEXTURE *texture_info;
     texture_info = (struct BTEX_TEXTURE *) data;
@@ -74,7 +74,7 @@ int main(void) {
     RUN_PROGRAM:
     
     // Initialize the list which will hold the texture information objects.
-    list_init(&textures, destroy_btex_texture);
+    list_init(&textures, free_btex_texture);
     printf("Enter directory: ");
     
     // Read directory address from user.

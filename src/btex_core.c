@@ -72,7 +72,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
     
     readcount = fread((void *) &magic_number[0], 1, 4, fp_texture);
     if (readcount < 4) {
-        retval = -1;
+        retval = -2;
     }
     else {
         uwidth = uheight = 0;
@@ -163,7 +163,7 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
             retval = 0;
         }
         else {
-            retval = -1;
+            retval = -3;
         }
     }
     
