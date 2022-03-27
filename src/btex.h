@@ -29,18 +29,88 @@ struct BTEX_TEXTURE {
 };
 
 
+
+/*
+ *  Initializes a texture object "btex_texture"
+ *
+ *  Parameter:
+ *      texture_data        :   Pointer to a btex_texture object which is being initialized
+ *
+ *  Returns
+ *      0 for successful initialization
+ *      -1 for error
+*/
 int btex_texture_init(struct BTEX_TEXTURE *texture_data);
 
+
+
+/*
+ *  Destroyes a texture object "btex_texture"
+ *
+ *  Parameter:
+ *      texture_data        :   Pointer to a btex_texture object which is being destroyed
+ *
+ *  Returns
+ *      Nothing
+*/
 void btex_texture_destroy(struct BTEX_TEXTURE *texture_data);
 
 
 
+/*
+ *  Retrieve useful texture information like texture width, height, type etc
+ *
+ *  Parameter:
+        filename            :   Full path to a texture file which must be either a
+                                RenderWare (.rw) texture format or a
+                                Portable Network Graphics (.png) format
+ *      texture_data        :   Pointer to an initialized btex_texture object which
+                                will receive the information extracted from the specified file
+ *
+ *  Returns
+ *      0 for successful execution
+ *      -1 if the specified file does not exist
+ *      -2 if the format is not a valid texture format
+*/
 int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture);
 
 
+
+/*
+ *  Build up a list of all the child directories (folders) for a
+ *  specific parent directory. This algorithm is not recursive, it
+ *  will not go through inside of each subdirectories.
+ *  The output list will not contain special directories like "." and "..".
+ *
+ *  Parameter:
+ *      path                :   Full path to a directory
+ *      directories         :   Pointer to an initialized singly linked list which
+ *                              will contain each directory as a C string (char *).
+ *
+ *  Returns
+ *      0 for successful execution
+ *      -1 if path or directory parameters are NULL
+ *      -2 if the specified path could not be found
+*/
 int btex_list_directories(const char *path, List *directories);
 
 
+
+/*
+ *  Build up a list of all the child directories (folders) for a
+ *  specific parent directory. This algorithm is not recursive, it
+ *  will not go through inside of each subdirectories.
+ *
+ *  Parameter:
+ *      path                :   Full path to a directory
+ *      directories         :   Pointer to an initialized singly linked list which
+ *                              will contain each directory as a C string (char *).
+ *
+ *  Returns
+ *      0 for successful execution
+ *      -1 if path or directory parameters are NULL
+ *      -2 if the specified path could not be found
+*/
 int btex_list_textures(const char *path, const char *directory, List *textures);
 
 
