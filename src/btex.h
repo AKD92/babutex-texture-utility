@@ -58,7 +58,9 @@ void btex_texture_destroy(struct BTEX_TEXTURE *texture_data);
 
 
 /*
- *  Retrieve useful texture information like texture width, height, type etc
+ *  Retrieve useful texture information about the texture from file.
+ *	Only the texture type, width, height and compression information is read.
+ *	This function does not read or modify the variables "file_name" and "file_path".
  *
  *  Parameter:
         filename            :   Full path to a texture file which must be either a
@@ -114,6 +116,25 @@ int btex_list_directories(const char *path, List *directories);
 int btex_list_textures(const char *path, const char *directory, List *textures);
 
 
+
+/*
+ *  Copy contents from the specified source file to the destination file.
+ *	This function does a byte by byte copy of the source file.
+ *	Metadata of source file like file attributes, file dates etc are not copied
+ *	to the destination file.
+ *
+ *  Parameter:
+        source_file         :   Full path to the source file from where the bytes are copied
+ *      dest_file	        :   Full path to the target file to where the bytes are copied
+ *
+ *  Returns
+ *      0 for successful execution
+ *      -1 if source_file or dest_file is NULL or empty
+ *      -2 if some error occurs while opening either files
+*/
 int btex_copy(const char *source_file, const char *dest_file);
+
+
+
 
 #endif // BTEX_H_INCLUDED
