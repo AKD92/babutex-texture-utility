@@ -99,19 +99,29 @@ int btex_list_directories(const char *path, List *directories);
 
 
 /*
- *  Build up a list of all the child directories (folders) for a
- *  specific parent directory. This algorithm is not recursive, it
- *  will not go through inside of each subdirectories.
+ *  Build up a list of all the texture files present on the specific
+ *  directory. Each file on the directory is checked against some
+ *  constraints to verify the validity. Current implementation supports
+ *  RenderWare texture (.rwtex) and Protable Network Graphics (.png) formats
+ *  as acceptable texture file.
+ *  This algorithm is not recursive, it will not go through inside of
+ *  each subdirectories.
  *
  *  Parameter:
  *      path                :   Full path to a directory
- *      directories         :   Pointer to an initialized singly linked list which
- *                              will contain each directory as a C string (char *).
+ *      directory           :   Name of a subdirectory (can be NULL)
+ *                              If not null, the algorithm will search on this directory
+ *                              In this case the search directory will be {path\directory}
+ *                              If null or empty, the search directory will be {path}
+ *      textures            :   Pointer to an initialized singly linked list which
+ *                              will contain the list of textures found on search directory
+ *                              Each texture on the list will be an instance of
+ *                              struct BTEX_TEXTURE.
  *
  *  Returns
  *      0 for successful execution
- *      -1 if path or directory parameters are NULL
- *      -2 if the specified path could not be found
+ *      -1 if path or texture parameters are NULL
+ *      -2 if the specified search directory could not be found
 */
 int btex_list_textures(const char *path, const char *directory, List *textures);
 
