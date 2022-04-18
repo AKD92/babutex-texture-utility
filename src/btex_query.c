@@ -7,12 +7,43 @@
 
 
 
+/*
+ *  Destroyes the BTEX_TEXTURE object specified on the data parameter
+ *  and releases (or de-allocates) the memory occupied by the texture
+ *  object itself, provided that the texture object was dynamically
+ *  allocated.
+ *
+ *  Parameter:
+ *      data                :   Pointer to the BTEX_TEXTURE object which is
+ *                              being destroyed and de-allocated from memory
+ *
+ *  Returns
+ *      Nothing
+*/
 static void free_btex_texture(void *data);
-void get_info_string(char *type, char *compression, const struct BTEX_TEXTURE *texture_info);
+
+
+
+/*  Receives the type and the compression level of the specified
+ *  texture in text format for displaying to user
+ *
+ *  Parameter:
+ *      type                :   Pointer to a character array which will receive
+ *                              the type of the texture in text format
+ *      compression         :   Pointer to a character array which will receive
+ *                              the compression level of the texture in text format
+ *                              For PNG texture the compression string will be empty
+ *                              Only RenderWare textures will have a compression level
+ *
+ *  Returns
+ *      Nothing
+*/
+void btex_infostr(char *type, char *compression, const struct BTEX_TEXTURE *texture_info);
+
 
 
 static void free_btex_texture(void *data) {
-    
+
     struct BTEX_TEXTURE *texture_info;
     texture_info = (struct BTEX_TEXTURE *) data;
     (void) btex_texture_destroy(texture_info);
@@ -21,23 +52,28 @@ static void free_btex_texture(void *data) {
 }
 
 
-void get_info_string(char *type, char *compression, const struct BTEX_TEXTURE *texture_info) {
-    
+
+void btex_infostr(char *type, char *compression, const struct BTEX_TEXTURE *texture_info) {
+
     const char *t_png, *t_rw;
     const char *c_bgra, *c_dxt, *c_unknown;
-    
+
+    // Text regarding texture compressions
     c_bgra = "Uncompressed";
     c_dxt = "DXT ";
     c_unknown = "UNKNOWN";
+
+    // Text regarding texgture types
     t_png = "PNG";
     t_rw = "RenderWare";
-    
+
+    // For no textures, return immediately
     if (texture_info == NULL)
         return;
-    
+
     if (texture_info->type == BTEX_TYPE_PNG) {
         (void) strcpy(type, t_png );
-        (void) strcpy(compression, "");
+        (void) strcpy(compression, "");         // No compression level for PNG textures
     }
     else if (texture_info->type == BTEX_TYPE_RW) {
         (void) strcpy(type, t_rw);
@@ -46,6 +82,9 @@ void get_info_string(char *type, char *compression, const struct BTEX_TEXTURE *t
         }
         else {
             (void) strcpy(compression, c_dxt);
+
+            // Push the last null (0) character one place to the right
+            // Set a digit (1-5) signifying compression level to the old place of null (0) character
             compression[strlen(compression) + 1] = '\0';
             compression[strlen(compression)] = (char) (texture_info->compression_level + 0x30);
         }
@@ -57,8 +96,10 @@ void get_info_string(char *type, char *compression, const struct BTEX_TEXTURE *t
 }
 
 
+
+// Main entry point for Texture Query (QTX) application.
 int main(void) {
-    
+
     char directory[2047];
     const struct BTEX_TEXTURE *texture_info;
     List textures;
@@ -66,46 +107,46 @@ int main(void) {
     int opval, key_pressed;
     unsigned int entry_no;
     char compression_name[20], format_name[20];
-    
+
     printf("Welcome to \"BABUTEX\\QTX\".\n");
     printf("Use this program to view basic texture information.\n");
-    
+
     // Start executing the main portion of this program.
     RUN_PROGRAM:
-    
+
     // Initialize the list which will hold the texture information objects.
     list_init(&textures, free_btex_texture);
     printf("Enter directory: ");
-    
+
     // Read directory address from user.
     gets(directory);
-    
+
     // List out all the texture files stored inside the given directory.
     opval = btex_list_textures((const char *) &directory[0], NULL, &textures);
     if (opval != 0) {
-        
+
         // Operation return value is non-zero, meaning we have encountered an error situation.
         printf("Could not read from the directory, error %d.\n", opval);
     }
     else if (list_size(&textures) == 0) {
-        
+
         printf("No texture file was found on the specified directory.\n");
     }
     else {
-        
+
         printf("\n");
         entry_no = 0;
         printf("%4s %50s %13s %10s %12s\n", "No.", "FILE", "DIMENSION", "TYPE", "COMPRESSION");
-        
+
         // Get information object to the first texture file.
         list_elem = list_head(&textures);
         while (list_elem != NULL) {
-            
+
             texture_info = (struct BTEX_TEXTURE *) list_data(list_elem);
-            
+
             // Get string representation of some of the integer values.
-            (void) get_info_string((char *) &format_name[0], (char *) &compression_name[0], texture_info);
-            
+            (void) btex_infostr((char *) &format_name[0], (char *) &compression_name[0], texture_info);
+
             // Print the information onto the display.
             printf
             (
@@ -117,17 +158,17 @@ int main(void) {
                  &format_name[0],
                  &compression_name[0]
             );
-            
+
             // Go get the next texture information entry and start over.
             list_elem = list_next(list_elem);
             entry_no += 1;
         }
         printf("%4s %50s %13s %10s %12s\n", "No.", "FILE", "DIMENSION", "TYPE", "COMPRESSION");
     }
-    
+
     // Release system memory occupied by the texture information list.
     list_destroy(&textures);
-    
+
     // Ask user if they want to use this program again. If yes, execute the main portion again.
     ASK_RUN:
         printf("Run this program again? (y/n): ");
@@ -137,6 +178,6 @@ int main(void) {
             goto RUN_PROGRAM;
         else if (key_pressed != 'n')
             goto ASK_RUN;
-    
+
     return 0;
 }

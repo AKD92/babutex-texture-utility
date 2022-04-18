@@ -63,11 +63,11 @@ void btex_texture_destroy(struct BTEX_TEXTURE *texture_data);
  *  This function does not read or modify the variables "file_name" and "file_path".
  *
  *  Parameter:
-        filename            :   Full path to a texture file which must be either a
-                                RenderWare (.rw) texture format or a
-                                Portable Network Graphics (.png) format
+ *      filename            :   Full path to a texture file which must be either a
+ *                              RenderWare (.rw) texture format or a
+ *                              Portable Network Graphics (.png) format
  *      texture_data        :   Pointer to an initialized btex_texture object which
-                                will receive the information extracted from the specified file
+ *                              will receive the information extracted from the specified file
  *
  *  Returns
  *      0 for successful execution
@@ -134,7 +134,7 @@ int btex_list_textures(const char *path, const char *directory, List *textures);
  *  to the destination file.
  *
  *  Parameter:
-        source_file         :   Full path to the source file from where the bytes are copied
+ *      source_file         :   Full path to the source file from where the bytes are copied
  *      dest_file           :   Full path to the target file to where the bytes are copied
  *
  *  Returns
