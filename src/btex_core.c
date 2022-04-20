@@ -8,18 +8,19 @@
 
 
 /*
- *  Changes the byte order of the specified 4-byte unsigned integer
- *  from big-endian (network) to little-endian (windows) byte order.
+ *  Reverses the byte order of the specified 32bit unsigned integer
+ *  from big-endian (network) to little-endian (windows) byte order,
+ *  or from little-endian (windows) to big-endian (network) byte order.
  *
  *  Parameter:
- *      bytes               :   Pointer to a 4-byte unsigned integer (casted to char *)
+ *      data                :   Pointer to a 32bit unsigned integer (casted to void *)
  *                              which will have its byte order changed
  *
  *  Returns
  *      0 for successful execution
  *      -1 when bytes is NULL
 */
-int btex_littleendian_4byte(char *bytes);
+int btex_reverseorder32(void *data);
 
 
 
@@ -46,12 +47,14 @@ void btex_texture_destroy(struct BTEX_TEXTURE *texture_data) {
 
 
 
-int btex_littleendian_4byte(char *bytes) {
+int btex_reverseorder32(void *data) {
     char first, second;
+    char *bytes;
 
-    if (bytes == NULL)
+    if (data == NULL)
         return -1;
 
+    bytes = (char *) data;
     first = *(bytes + 3);
     second = *(bytes + 2);
     *(bytes + 3) = *(bytes + 0);
@@ -117,8 +120,8 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture) {
             }
 
             // Convert from big endian (network) byte order to little endian (windows) byte order.
-            (void) btex_littleendian_4byte((char *) &uwidth);
-            (void) btex_littleendian_4byte((char *) &uheight);
+            (void) btex_reverseorder32((void *) &uwidth);
+            (void) btex_reverseorder32((void *) &uheight);
             texture->width = uwidth;
             texture->height = uheight;
             texture->type = BTEX_TYPE_PNG;
