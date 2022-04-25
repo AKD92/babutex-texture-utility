@@ -24,7 +24,8 @@ static void free_btex_texture(void *data);
 
 
 
-/*  Receives the type and the compression level of the specified
+/*
+ *  Receives the type and the compression level of the specified
  *  texture in text format for displaying to user
  *
  *  Parameter:
