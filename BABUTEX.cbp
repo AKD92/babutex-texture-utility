@@ -131,6 +131,13 @@
 			<Option compilerVar="CC" />
 			<Option target="QueryTextureInfo" />
 		</Unit>
+		<Unit filename="src/btex_update.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Debug64" />
+			<Option target="Release64" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

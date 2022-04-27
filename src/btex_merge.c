@@ -1,4 +1,19 @@
 
+
+/************************************************************************************
+    Implementation of texture merging program "BTEX_MERGE"
+    Author:             Ashis Kumar Das
+    Email:              akd.bracu@gmail.com
+    GitHub:             https://github.com/AKD92
+*************************************************************************************/
+
+
+
+
+
+
+
+
 #include "btex.h"
 #include <stdio.h>
 #include <stdlib.h>

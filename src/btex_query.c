@@ -1,4 +1,19 @@
 
+
+/************************************************************************************
+    Implementation of texture query program "QTX"
+    Author:             Ashis Kumar Das
+    Email:              akd.bracu@gmail.com
+    GitHub:             https://github.com/AKD92
+*************************************************************************************/
+
+
+
+
+
+
+
+
 #include "btex.h"
 #include <stdio.h>
 #include <stdlib.h>

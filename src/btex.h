@@ -1,4 +1,19 @@
 
+
+/************************************************************************************
+    Program interface for BABUTEX TEXTURE UTILITY PROGRAM
+    Author:             Ashis Kumar Das
+    Email:              akd.bracu@gmail.com
+    GitHub:             https://github.com/AKD92
+*************************************************************************************/
+
+
+
+
+
+
+
+
 #ifndef BTEX_H_INCLUDED
 #define BTEX_H_INCLUDED
 
