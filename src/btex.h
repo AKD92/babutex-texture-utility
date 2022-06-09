@@ -98,6 +98,8 @@ int btex_texture_info(const char *filename, struct BTEX_TEXTURE *texture);
  *  specific parent directory. This algorithm is not recursive, it
  *  will not go through inside of each subdirectories.
  *  The output list will not contain special directories like "." and "..".
+ *  Each entry on the output list will contain the NAME of a child
+ *  directory only, not with it's full path.
  *
  *  Parameter:
  *      path                :   Full path to a directory
