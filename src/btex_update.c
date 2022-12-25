@@ -50,8 +50,7 @@ int btex_update(const char *texture_root_dir, const char *src_dir) {
         return -1;
     }
     
-    // Initialize linked lists which will hold subdirectories
-    // and textures inside them
+    // Initialize linked lists which will hold subdirectories of texture root dir
     (void) list_init(&directories, free);
     
     // Get the list of subdirectories of the texture root directory
