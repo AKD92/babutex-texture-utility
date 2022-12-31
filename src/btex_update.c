@@ -107,6 +107,7 @@ int btex_update(const char *texture_root_dir, const char *src_dir) {
                 }
             }
         }
+        list_destroy(&textures);
     }
     
     CLEANUP:
