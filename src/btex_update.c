@@ -45,7 +45,7 @@ int btex_update(const char *dest_root_dir, const char *src_dir) {
     int opval, key_pressed;
     int retval, isempty, isnull;
     List dest_dirs, dest_textures, src_textures;
-    ListElem *dir_elem, *tex_elem, *src_tex_elem;
+    ListElem *dir_elem, *dest_tex_elem, *src_tex_elem;
     char *dest_dir;
     struct BTEX_TEXTURE *texture;
     char buffer[2048];
@@ -101,13 +101,13 @@ int btex_update(const char *dest_root_dir, const char *src_dir) {
             // Try each source texture and see if it is on the destination dir by filename
             src_tex_elem = list_head(&src_textures);
             while (src_tex_elem != NULL) {
-                opval = list_search(&dest_textures, list_data(src_tex_elem), &tex_elem, compare_texture_by_filename);
+                opval = list_search(&dest_textures, list_data(src_tex_elem), &dest_tex_elem, compare_texture_by_filename);
                 
                 // If the source texture matches a destination texture by filename
                 // Then we copy it to the destination folder and replace the old one with source
                 if (opval == 1) {
                     src_texture = (struct BTEX_TEXTURE *) list_data(src_tex_elem);
-                    dest_texture = (struct BTEX_TEXTURE *) list_data(tex_elem);
+                    dest_texture = (struct BTEX_TEXTURE *) list_data(dest_tex_elem);
                     (void) sprintf(&src_full_path, "%s\\%s", src_texture->file_path, src_texture->file_name);
                     (void) sprintf(&dest_full_path, "%s\\%s",dest_texture->file_path, dest_texture->file_name);
                     
